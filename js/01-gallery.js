@@ -1,45 +1,35 @@
-// Создание и рендер разметки по массиву данных galleryItems и предоставленному шаблону элемента галереи.
-
-/* <div class="gallery__item">
-  <a class="gallery__link" href="large-image.jpg">
-    <img
-      class="gallery__image"
-      src="small-image.jpg"
-      data-source="large-image.jpg"
-      alt="Image description"
-    />
-  </a>
-</div> */
 import { galleryItems } from './gallery-items.js';
 
-const galleryWrapRef = document.querySelector(".gallery");
-const galleryItemRef = document.createElement("div");
-const galleryLinkRef =  document.createElement("a");
-const galleryImgRef = document.createElement("img");
+const galleryContainerRef = document.querySelector(".gallery");
+const galleryMarkup = createGalleryItemMarkup(galleryItems);
 
-galleryItemRef.classList.add("gallery__item");
-galleryLinkRef.classList.add("gallery__link");
-galleryImgRef.classList.add("gallery__image");
-galleryImgRef.setAttribute("src", "");
-galleryImgRef.setAttribute("alt", "");
-galleryLinkRef.setAttribute("href", "");
-galleryImgRef.setAttribute("data-source", "");
-galleryLinkRef.append(galleryImgRef);
-galleryItemRef.append(galleryLinkRef);
+galleryContainerRef.insertAdjacentHTML("afterbegin", galleryMarkup);
 
-function markupGallery (array) {
-  const galleryMarkup = galleryItems.map( ({ preview, original, description }) => {
-    galleryImgRef.setAttribute("src", ${preview} );
-    galleryImgRef.setAttribute("alt", ${description} );
-    galleryLinkRef.setAttribute("href", ${original});
-    galleryImgRef.setAttribute("data-source", ${original});
-    galleryWrapRef.append(galleryItemRef);
-  })
-  return galleryMarkup;
+function createGalleryItemMarkup(gallery) {
+ return gallery.map( ({ preview, original, description }) => {
+  return `<div class="gallery__item">
+   <a class="gallery__link" href="${original}">
+     <img
+       class="gallery__image"
+       src="${preview}"
+       data-source="${original}"
+       alt="${description}"
+     />
+   </a>
+ </div>`;
+ })
+ .join("")
 }
-console.log(markupGallery(galleryItems));
 
+const onImageClick = event => {
+  event.preventDefault();
+  const onModalOpen = basicLightbox.create(`<img src="${event.target.dataset.source}">`);
+  onModalOpen.show();
+  galleryContainerRef.addEventListener("keydown", (event) => {
+    if ( event.code === "Escape" ) {
+      onModalOpen.close();
+    }
+  });
+}
 
-
-
-console.log(galleryItems);
+galleryContainerRef.addEventListener("click", onImageClick);
