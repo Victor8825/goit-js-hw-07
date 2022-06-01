@@ -22,10 +22,12 @@ function createGalleryItemMarkup(gallery) {
 }
 
 const onImageClick = event => {
+  console.log(event);
   event.preventDefault();
+  event.target.blur();
   const onModalOpen = basicLightbox.create(`<img src="${event.target.dataset.source}">`);
   onModalOpen.show();
-  galleryContainerRef.addEventListener("keydown", (event) => {
+  window.addEventListener("keydown", (event) => {
     if ( event.code === "Escape" ) {
       onModalOpen.close();
     }
