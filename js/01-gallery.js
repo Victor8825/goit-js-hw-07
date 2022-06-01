@@ -22,7 +22,6 @@ function createGalleryItemMarkup(gallery) {
 }
 
 const onImageClick = event => {
-  console.log(event);
   event.preventDefault();
   event.target.blur();
   const onModalOpen = basicLightbox.create(`<img src="${event.target.dataset.source}">`);
